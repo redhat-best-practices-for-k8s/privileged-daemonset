@@ -212,13 +212,13 @@ func WaitDaemonsetReady(namespace, name string, timeout time.Duration) error {
 		}
 
 		if daemonSet.Status.DesiredNumberScheduled == nodesCount {
-			logrus.Infof("Waiting for (%d) debug pods to be ready: %+v", nodesCount, daemonSet.Status)
+			logrus.Infof("Waiting for (%d) daemonset pods to be ready: %+v", nodesCount, daemonSet.Status)
 			if isDaemonSetReady(&daemonSet.Status) {
 				isReady = true
 				break
 			}
 		} else {
-			logrus.Warnf("daemonset DesiredNumberScheduled %d not equal to number of nodes:%d, please instantiate debug pods on all nodes",
+			logrus.Warnf("daemonset DesiredNumberScheduled %d not equal to number of nodes:%d, please make sure daemonset pods can be deployed on all nodes",
 				daemonSet.Status.DesiredNumberScheduled, nodesCount)
 		}
 
