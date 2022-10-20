@@ -218,8 +218,8 @@ func WaitDaemonsetReady(namespace, name string, timeout time.Duration) error {
 				break
 			}
 		} else {
-			logrus.Warnf("daemonset DesiredNumberScheduled %d not equal to number of nodes:%d, please make sure daemonset pods can be deployed on all nodes",
-				daemonSet.Status.DesiredNumberScheduled, nodesCount)
+			logrus.Warnf("Daemonset %s (ns %s) could not be deployed: DesiredNumberSheduled=%d - NodesCount=%d",
+				name, namespace, daemonSet.Status.DesiredNumberScheduled, nodesCount)
 		}
 
 		time.Sleep(waitingTime)
