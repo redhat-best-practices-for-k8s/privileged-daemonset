@@ -175,6 +175,33 @@ func doesDaemonSetExist(daemonSetName, namespace string) bool {
 	return err == nil
 }
 
+func DaemonSetReady(daemonSetName, namespace, image string) bool {
+	const hoursPerWeek = 168
+
+	// The daemon set will be considered not ready if it does not exist
+	ds, err := daemonsetClient.K8sClient.AppsV1().DaemonSets(namespace).Get(context.TODO(), daemonSetName, metav1.GetOptions{})
+	if err != nil {
+		logrus.Infof("could not get daemon set %s, err=%s", daemonSetName, err.Error())
+		return false
+	}
+
+	// Or if it's been running for more than a week
+	if time.Since(ds.CreationTimestamp.Time).Hours() > hoursPerWeek {
+		return false
+	}
+
+	// Or if the containers images do not match the desired one
+	containers := ds.Spec.Template.Spec.Containers
+	for i := 0; i < len(containers); i++ {
+		if containers[i].Image != image {
+			return false
+		}
+	}
+
+	// Or if it's not healthy
+	return isDaemonSetReady(&ds.Status)
+}
+
 // This function is used to create a daemonset with the specified name, namespace, container name and image with the timeout to check
 // if the deployment is ready and all daemonset pods are running fine
 func CreateDaemonSet(daemonSetName, namespace, containerName, imageWithVersion string, labels map[string]string, timeout time.Duration) (*v1core.PodList, error) {
