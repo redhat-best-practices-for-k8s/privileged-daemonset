@@ -175,8 +175,8 @@ func doesDaemonSetExist(daemonSetName, namespace string) bool {
 	return err == nil
 }
 
-func DaemonSetReady(daemonSetName, namespace, image string) bool {
-	const hoursPerWeek = 168
+func IsDaemonSetReady(daemonSetName, namespace, image string) bool {
+	const hoursPerWeek = 168 // 7 days
 
 	// The daemon set will be considered not ready if it does not exist
 	ds, err := daemonsetClient.K8sClient.AppsV1().DaemonSets(namespace).Get(context.TODO(), daemonSetName, metav1.GetOptions{})
@@ -190,12 +190,9 @@ func DaemonSetReady(daemonSetName, namespace, image string) bool {
 		return false
 	}
 
-	// Or if the containers images do not match the desired one
-	containers := ds.Spec.Template.Spec.Containers
-	for i := 0; i < len(containers); i++ {
-		if containers[i].Image != image {
-			return false
-		}
+	// Or if the container image do not match the desired one
+	if ds.Spec.Template.Spec.Containers[0].Image != image {
+		return false
 	}
 
 	// Or if it's not healthy
