@@ -409,6 +409,10 @@ func namespaceCreate(namespace string) error {
 	_, err := daemonsetClient.K8sClient.CoreV1().Namespaces().Create(context.Background(), &v1core.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: namespace,
+			// OCP 4.14 support
+			Labels: map[string]string{"pod-security.kubernetes.io/enforce": "privileged",
+				"pod-security.kubernetes.io/audit": "privileged",
+				"pod-security.kubernetes.io/warn":  "privileged"},
 		}},
 		metav1.CreateOptions{},
 	)
