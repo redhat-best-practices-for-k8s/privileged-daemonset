@@ -207,7 +207,7 @@ func IsDaemonSetReady(daemonSetName, namespace, image string) bool {
 
 // This function is used to create a daemonset with the specified name, namespace, container name and image with the timeout to check
 // if the deployment is ready and all daemonset pods are running fine
-func CreateDaemonSet(daemonSetName, namespace, containerName, imageWithVersion string, labels map[string]string, timeout time.Duration) (aPodList *v1core.PodList, err error) {
+func CreateDaemonSetDummy(daemonSetName, namespace, containerName, imageWithVersion string, labels map[string]string, timeout time.Duration) (aPodList *v1core.PodList, err error) {
 	// first, initialize the namespace
 	err = initNamespace(namespace)
 	if err != nil {

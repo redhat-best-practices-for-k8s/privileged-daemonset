@@ -26,7 +26,7 @@ k8sPriviledgedDs.SetDaemonSetClient(myK8sInterface) // myK8sInterface is of type
 **To create**
 
 ``` 
-daemonSetRunningPods, err := k8sPriviledgedDs.CreateDaemonSet(myDaemonSetName, myNameSpace, daemonSetContainerName, imageWithVersion, timeOut)
+daemonSetRunningPods, err := k8sPriviledgedDs.CreateDaemonSetDummy(myDaemonSetName, myNameSpace, daemonSetContainerName, imageWithVersion, timeOut)
 ```
 
 **To delete**
